@@ -1,0 +1,225 @@
+﻿<!doctype html>
+<html lang='pt-BR'>
+<head>
+<meta charset='utf-8'/>
+<meta name='viewport' content='width=device-width,initial-scale=1'/>
+<title>PROGRAMACAO_STC</title>
+<style>
+*{box-sizing:border-box}
+body{font-family:Inter,Arial,sans-serif;background:#f4f6f8;margin:0;color:#111;font-size:15px}
+.app{max-width:1100px;margin:auto;padding:14px}
+header.appbar{background:#0b8457;color:#fff;padding:14px;border-radius:10px;display:flex;gap:10px;align-items:center}
+.title{font-size:18px;font-weight:700}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+.controls select,.controls input{padding:10px 12px;border-radius:12px;border:1px solid #ccc;font-size:15px;background:#fff}
+.controls input{min-width:320px;flex:1}
+.cardsWrap{display:grid;grid-template-columns:1fr;gap:16px;padding:10px 0}
+.card{background:#fff;border-radius:14px;padding:16px;box-shadow:0 3px 10px rgba(0,0,0,.1);display:flex;flex-direction:column;gap:12px;font-size:15px;border-left:6px solid #d9d9d9}
+.card.prio-01{border-left-color:#d62828}
+.card.prio-02{border-left-color:#f77f00}
+.card.prio-02{border-left-color:#2a9d8f}
+.topline{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
+.topRight{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.nota{font-size:20px;font-weight:800;color:#0b8457}
+.sub{font-size:13px;color:#555}
+.addr{font-size:14px;color:#333;line-height:1.45}
+.addr strong{font-weight:800}
+.fields{display:flex;gap:8px;flex-wrap:wrap}
+.pill{background:#eef3f2;padding:7px 10px;border-radius:12px;font-size:13px}
+.pill.priority{font-weight:800;color:#fff}
+.pill.prio-01{background:#d62828}
+.pill.prio-02{background:#f77f00}
+.pill.Sem prioridade{background:#2a9d8f}
+.pill.novo{background:#0b8457;color:#fff;font-weight:800;letter-spacing:.3px}
+.pill.obs{background:#eef3f2;border:none;color:#111}
+.count{padding:10px 12px;background:#fff;border-radius:12px;border:1px solid #ccc}
+.empty{display:none;text-align:center;color:#888;padding:20px}
+@media(max-width:600px){.controls input{min-width:100%}.app{padding:10px}.card{padding:14px}.topRight{justify-content:flex-start}}
+</style>
+</head>
+<body>
+<div class='app'>
+<header class='appbar'>
+<div>
+<div class='title'>PROGRAMACAO STC PARNAMIRIM</div>
+<div style='font-size:12px'>Última atualização: 17/07/2026 07:44:03</div>
+</div>
+</header>
+<div class='controls'>
+<select id='filtroPrioridade'><option value=''>Todas as prioridades</option></select>
+<select id='filtroEquipe'><option value=''>Todas as equipes</option></select>
+<select id='filtroNovo'><option value=''>Todos</option><option value='SIM'>Somente NOVOS</option>
+<input id='qSearch' type='search' placeholder='Pesquisar: equipe, nota, local, bairro, rua, medidor, OBS...' />
+<div class='count' id='contadorTotal'>Total: 0</div>
+</div>
+<div id='cards' class='cardsWrap'></div>
+<div id='empty' class='empty'>Nenhum registro encontrado.</div>
+<div style='display:none'><table id='tblNotas'><tbody>
+<tr data-equipe='STCPNA0001' data-tensao='11' data-nota='4502032282' data-concl='22/07/2026' data-txtcode='Ligação Nova BT MUC' data-local='MACAIBA' data-bairro='BELA MACAIBA' data-rua='RUA FRANCISCA FERREIRA DE LIMA 58, CD-COND' data-dtpedido='Vistoria MUC' data-medidor='' data-obs='' data-valor='' data-prioridade='' data-novo=''></tr>
+<tr data-equipe='STCPNA0001' data-tensao='31' data-nota='4502062268' data-concl='21/07/2026' data-txtcode='Ligação Nova BT MUC' data-local='PARNAMIRIM' data-bairro='NOVA PARNAMIRIM' data-rua='AV GANDHI 131, CD-COND' data-dtpedido='Vistoria MUC' data-medidor='' data-obs='' data-valor='' data-prioridade='' data-novo=''></tr>
+<tr data-equipe='STCPNA0001' data-tensao='11' data-nota='4502047992' data-concl='21/07/2026' data-txtcode='Ligação Nova BT MUC' data-local='PARNAMIRIM' data-bairro='NOVA ESPERANCA' data-rua='RUA FRANCISCO FERNANDES PIMENTA 110, CS-03' data-dtpedido='Vistoria MUC' data-medidor='' data-obs='' data-valor='' data-prioridade='' data-novo=''></tr>
+<tr data-equipe='STCPNA0001' data-tensao='31' data-nota='4502056046' data-concl='23/07/2026' data-txtcode='Ligação Nova BT MUC' data-local='PARNAMIRIM' data-bairro='NOVA PARNAMIRIM' data-rua='AV MADRE TEREZA DE CALCUTA 110, CS-110' data-dtpedido='Vistoria MUC' data-medidor='' data-obs='' data-valor='' data-prioridade='' data-novo=''></tr>
+<tr data-equipe='STCPNA0001' data-tensao='11' data-nota='4502064884' data-concl='23/07/2026' data-txtcode='Ligação Nova BT MUC' data-local='MACAIBA' data-bairro='BELA MACAIBA' data-rua='RUA GESINA DALVA DE MEDEIROS 110, CD-COND' data-dtpedido='Vistoria MUC' data-medidor='' data-obs='' data-valor='' data-prioridade='' data-novo=''></tr>
+<tr data-equipe='STCPNA0001' data-tensao='31' data-nota='4502058305' data-concl='22/07/2026' data-txtcode='Ligação Nova BT MUC' data-local='PARNAMIRIM' data-bairro='NOVA PARNAMIRIM' data-rua='AV GANDHI 2150, CD-COND' data-dtpedido='Vistoria MUC' data-medidor='' data-obs='' data-valor='' data-prioridade='' data-novo=''></tr>
+<tr data-equipe='STCPNA0001' data-tensao='11' data-nota='4801299403' data-concl='24/07/2026' data-txtcode='Verificaçao Leitura BT - Campanha' data-local='PARNAMIRIM' data-bairro='EMAUS' data-rua='AV AEROPORTO BRIGADEIRO EDUARDO GOMES 446' data-dtpedido='' data-medidor='2222591719' data-obs='Caixa opaca' data-valor='' data-prioridade='PRIO 1' data-novo=''></tr>
+<tr data-equipe='STCPNA0001' data-tensao='11' data-nota='4801299402' data-concl='24/07/2026' data-txtcode='Verificaçao Leitura BT - Campanha' data-local='PARNAMIRIM' data-bairro='EMAUS' data-rua='RUA AEROPORTO DE ILHEUS 406' data-dtpedido='' data-medidor='2221822130' data-obs='Caixa opaca' data-valor='' data-prioridade='PRIO 1' data-novo=''></tr>
+<tr data-equipe='STCPNA0002' data-tensao='31' data-nota='4801295824' data-concl='24/06/2026' data-txtcode='Verificaçao Leitura BT - Campanha' data-local='PARNAMIRIM' data-bairro='EMAUS' data-rua='RUA SANTA MATILDE 18' data-dtpedido='' data-medidor='2130788338' data-obs='Caixa opaca' data-valor='' data-prioridade='PRIO 1' data-novo=''></tr>
+<tr data-equipe='STCPNA0002' data-tensao='31' data-nota='4801295824' data-concl='24/06/2026' data-txtcode='Verificaçao Leitura BT - Campanha' data-local='PARNAMIRIM' data-bairro='EMAUS' data-rua='RUA SANTA MATILDE 18' data-dtpedido='' data-medidor='2130788338' data-obs='Caixa opaca' data-valor='' data-prioridade='PRIO 1' data-novo=''></tr>
+<tr data-equipe='STCPNA0004' data-tensao='11' data-nota='4502064577' data-concl='17/07/2026' data-txtcode='Ligação Nova BT' data-local='MACAIBA' data-bairro='SAO JOSE' data-rua='RUA AYRTON JOSE DA SILVA 26' data-dtpedido='' data-medidor='' data-obs='' data-valor='' data-prioridade='' data-novo=''></tr>
+<tr data-equipe='STCPNA0004' data-tensao='11' data-nota='4801299399' data-concl='24/07/2026' data-txtcode='Verificaçao Leitura BT - Campanha' data-local='PARNAMIRIM' data-bairro='EMAUS' data-rua='RUA AEROPORTO DE LONDRINA 221' data-dtpedido='' data-medidor='2221989824' data-obs='Caixa opaca' data-valor='' data-prioridade='PRIO 1' data-novo=''></tr>
+<tr data-equipe='STCPNA0004' data-tensao='31' data-nota='4601588708' data-concl='29/07/2026' data-txtcode='Subst. Equipamento Med. BT – Enlace PEC' data-local='PARNAMIRIM' data-bairro='EMAUS' data-rua='RUA AEROPORTO DE PETROLINA 132' data-dtpedido='' data-medidor='2222120015' data-obs='M100' data-valor='' data-prioridade='PRIO 1' data-novo=''></tr>
+<tr data-equipe='STCPNA0004' data-tensao='31' data-nota='4601588773' data-concl='29/07/2026' data-txtcode='Subst. Equipamento Med. BT – Enlace PEC' data-local='PARNAMIRIM' data-bairro='EMAUS' data-rua='RUA AURINO VILA 401, AP-67' data-dtpedido='' data-medidor='2180480202' data-obs='M100' data-valor='' data-prioridade='PRIO 1' data-novo=''></tr>
+<tr data-equipe='STCPNA0005' data-tensao='11' data-nota='4801299361' data-concl='24/07/2026' data-txtcode='Verificaçao Leitura BT - Campanha' data-local='PARNAMIRIM' data-bairro='SANTOS REIS' data-rua='RUA PEDRO NUNES FERREIRA 250' data-dtpedido='' data-medidor='2130016440' data-obs='Caixa opaca' data-valor='' data-prioridade='PRIO 1' data-novo=''></tr>
+<tr data-equipe='STCPNA0005' data-tensao='11' data-nota='4801299362' data-concl='24/07/2026' data-txtcode='Verificaçao Leitura BT - Campanha' data-local='PARNAMIRIM' data-bairro='SANTOS REIS' data-rua='RUA TENENTE OSORIO 520' data-dtpedido='' data-medidor='80144970' data-obs='Caixa opaca' data-valor='' data-prioridade='PRIO 1' data-novo=''></tr>
+<tr data-equipe='STCPNA0006' data-tensao='31' data-nota='4801299398' data-concl='24/07/2026' data-txtcode='Verificaçao Leitura BT - Campanha' data-local='PARNAMIRIM' data-bairro='EMAUS' data-rua='RUA ANALIA JOVEM DE PAULA 351' data-dtpedido='' data-medidor='2010084516' data-obs='Caixa opaca' data-valor='' data-prioridade='PRIO 1' data-novo=''></tr>
+<tr data-equipe='STCPNA0006' data-tensao='11' data-nota='4801299401' data-concl='24/07/2026' data-txtcode='Verificaçao Leitura BT - Campanha' data-local='PARNAMIRIM' data-bairro='EMAUS' data-rua='RUA AEROPORTO DE NAVEGANTES 425' data-dtpedido='' data-medidor='2221658887' data-obs='Caixa opaca' data-valor='' data-prioridade='PRIO 1' data-novo=''></tr>
+<tr data-equipe='STCPNA0006' data-tensao='11' data-nota='4801299400' data-concl='24/07/2026' data-txtcode='Verificaçao Leitura BT - Campanha' data-local='PARNAMIRIM' data-bairro='EMAUS' data-rua='RUA AEROPORTO DE PAMPULHA 130' data-dtpedido='' data-medidor='2221865807' data-obs='Caixa opaca' data-valor='' data-prioridade='PRIO 1' data-novo=''></tr>
+<tr data-equipe='STCPNA0007' data-tensao='11' data-nota='4801299397' data-concl='24/07/2026' data-txtcode='Verificaçao Leitura BT - Campanha' data-local='PARNAMIRIM' data-bairro='EMAUS' data-rua='RUA AEROPORTO DE PELOTAS 171' data-dtpedido='' data-medidor='2191364603' data-obs='Caixa opaca' data-valor='' data-prioridade='PRIO 1' data-novo=''></tr>
+<tr data-equipe='STCPNA0007' data-tensao='11' data-nota='4801299404' data-concl='24/07/2026' data-txtcode='Verificaçao Leitura BT - Campanha' data-local='PARNAMIRIM' data-bairro='EMAUS' data-rua='RUA AEROPORTO DE PELOTAS 421' data-dtpedido='' data-medidor='2241079506' data-obs='Caixa opaca' data-valor='' data-prioridade='PRIO 1' data-novo=''></tr>
+
+</tbody></table></div>
+<script>
+function clsPrioridade(v){
+  var t=(v||'').trim().toUpperCase();
+  if(t==='PRIO-01' || t==='PRIO 01' || t==='PRIO1' || t==='PRIO 1') return 'prio-01';
+  if(t==='PRIO-02' || t==='PRIO 02' || t==='PRIO2' || t==='PRIO 2') return 'prio-02';
+  if(t==='PRIO-03' || t==='PRIO-03' || t==='PRIO-03' || t==='PRIO-03') return 'prio-03';
+  return '';
+}
+function formatMoneyBR(v){
+  var txt=(v||'').toString().trim();
+  if(!txt) return '—';
+  txt=txt.replace(/R\$/g,'').replace(/\s+/g,'');
+  if(txt.indexOf(',')>-1){
+    txt=txt.replace(/\./g,'').replace(',','.');
+  }
+  var num=Number(txt);
+  if(isNaN(num)) return v;
+  return num.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+}
+function buildCards(){
+  var rows=document.querySelectorAll('#tblNotas tbody tr');
+  var cards=document.getElementById('cards');
+  var filtroPrioridade=document.getElementById('filtroPrioridade');
+  var filtroEquipe=document.getElementById('filtroEquipe');
+  var search=document.getElementById('qSearch');
+  var data=[];
+  rows.forEach(function(tr){
+    var d=tr.dataset;
+    data.push({
+      equipe:d.equipe||'',
+      tensao:d.tensao||'',
+      nota:d.nota||'',
+      concl:d.concl||'',
+      txtcode:d.txtcode||'',
+      local:d.local||'',
+      bairro:d.bairro||'',
+      rua:d.rua||'',
+      dtpedido:d.dtpedido||'',
+      medidor:d.medidor||'',
+      obs:d.obs||'',
+      valor:d.valor||'',
+      prioridade:d.prioridade||'',
+      novo:d.novo||''
+    });
+  });
+  var prios=Array.from(new Set(data.map(function(x){return x.prioridade;}))).filter(function(x){return x&&x.trim()!==''}).sort();
+  prios.forEach(function(p){
+    var o=document.createElement('option');
+    o.value=p;
+    o.textContent=p;
+    filtroPrioridade.appendChild(o);
+  });
+  var equipes=Array.from(new Set(data.map(function(x){return x.equipe;}))).filter(function(x){return x&&x.trim()!==''}).sort();
+  equipes.forEach(function(e){
+    var o=document.createElement('option');
+    o.value=e;
+    o.textContent=e;
+    filtroEquipe.appendChild(o);
+  });
+  function addPill(container, txt, extraClass){
+    if(!txt || String(txt).trim()==='') return;
+    var p=document.createElement('div');
+    p.className='pill' + (extraClass ? ' ' + extraClass : '');
+    p.textContent=txt;
+    container.appendChild(p);
+  }
+  function render(){
+    cards.innerHTML='';
+    var filtroNovo=document.getElementById('filtroNovo');
+    var q=(search.value||'').toLowerCase();
+    var selPrio=filtroPrioridade.value;
+    var selEquipe=filtroEquipe.value;
+    var selNovo=filtroNovo.value;
+    data.forEach(function(it){
+      if(selPrio && it.prioridade !== selPrio) return;
+      if(selEquipe && it.equipe !== selEquipe) return;
+      if(selNovo && (!it.novo || it.novo.trim()==='')) return;
+      var hay=(it.equipe+' '+it.nota+' '+it.local+' '+it.bairro+' '+it.rua+' '+it.medidor+' '+it.prioridade+' '+it.txtcode+' '+it.tensao+' '+it.obs+' '+it.novo).toLowerCase();
+      if(q && hay.indexOf(q)===-1) return;
+      var cls=clsPrioridade(it.prioridade);
+      var card=document.createElement('div');
+      card.className='card '+cls;
+      var topo=document.createElement('div');
+      topo.className='topline';
+      var esquerda=document.createElement('div');
+      var divNota=document.createElement('div');
+      divNota.className='nota';
+      divNota.textContent=it.nota||'—';
+      var divSub=document.createElement('div');
+      divSub.className='sub';
+      divSub.textContent='Equipe: '+(it.equipe||'—')+' | Tensão: '+(it.tensao||'—');
+      esquerda.appendChild(divNota);
+      esquerda.appendChild(divSub);
+      var direita=document.createElement('div');
+      direita.className='topRight';
+        if((it.novo||'').trim()!==''){
+          var novoBadge=document.createElement('div');
+          novoBadge.className='pill novo';
+          novoBadge.textContent='NOVO';
+          direita.appendChild(novoBadge);
+        }
+        var badge=document.createElement('div');
+        badge.className='pill priority '+cls;
+        badge.textContent=it.prioridade||'Sem prioridade';
+        direita.appendChild(badge);
+      topo.appendChild(esquerda);
+      topo.appendChild(direita);
+      var addr=document.createElement('div');
+      addr.className='addr';
+      var strongLocal=document.createElement('strong');
+      strongLocal.textContent=it.local||'';
+      addr.appendChild(strongLocal);
+      if((it.bairro||'').trim()!==''){
+        addr.appendChild(document.createTextNode(' • '+it.bairro));
+      }
+      addr.appendChild(document.createElement('br'));
+      addr.appendChild(document.createTextNode(it.rua||''));
+      var fields=document.createElement('div');
+      fields.className='fields';
+      addPill(fields, 'Concl. desejada: ' + (it.concl||'—'), '');
+      addPill(fields, 'DT PEDIDO: ' + (it.dtpedido||'—'), '');
+      addPill(fields, 'Medidor: ' + (it.medidor||'—'), '');
+      addPill(fields, 'Txt.code codif: ' + (it.txtcode||'—'), '');
+      addPill(fields, 'Valor da Dívida: ' + formatMoneyBR(it.valor), '');
+      if((it.obs||'').trim()!=='') addPill(fields, 'OBS: ' + it.obs, 'obs');
+      card.appendChild(topo);
+      card.appendChild(addr);
+      card.appendChild(fields);
+      cards.appendChild(card);
+    });
+    var total=document.querySelectorAll('#cards .card').length;
+    document.getElementById('contadorTotal').textContent='Total: '+total;
+    document.getElementById('empty').style.display=total ? 'none' : 'block';
+  }
+  filtroPrioridade.addEventListener('change', render);
+  filtroEquipe.addEventListener('change', render);
+  filtroNovo.addEventListener('change', render);
+  search.addEventListener('input', render);
+  render();
+}
+document.addEventListener('DOMContentLoaded', buildCards);
+</script>
+</div>
+</body>
+</html>
